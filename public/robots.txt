@@ -1,0 +1,9 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow auth pages
+Disallow: /auth/
+
+# Sitemap
+Sitemap: https://1001media.app/sitemap.xml
