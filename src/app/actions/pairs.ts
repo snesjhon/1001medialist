@@ -24,6 +24,22 @@ export async function getCurrentPair(userId: string) {
 
   const pairNumber = profile.current_pair_number;
 
+  // Use the generic getPairByNumber function
+  const pairData = await getPairByNumber(userId, pairNumber);
+
+  if (!pairData) {
+    return null;
+  }
+
+  return {
+    profile,
+    ...pairData,
+  };
+}
+
+export async function getPairByNumber(userId: string, pairNumber: number) {
+  const supabase = await createClient();
+
   // Fetch the album and movie for this pair number
   const [albumResult, movieResult] = await Promise.all([
     supabase
@@ -55,7 +71,6 @@ export async function getCurrentPair(userId: string) {
   ]);
 
   return {
-    profile,
     album: albumResult.data,
     movie: movieResult.data,
     userAlbum: userAlbumResult.data,
@@ -84,6 +99,7 @@ export async function completeAlbum(
 
   await checkAndAdvancePair(userId);
   revalidatePath("/dashboard");
+  revalidatePath("/media/[number]", "page");
 }
 
 export async function completeMovie(
@@ -107,6 +123,7 @@ export async function completeMovie(
 
   await checkAndAdvancePair(userId);
   revalidatePath("/dashboard");
+  revalidatePath("/media/[number]", "page");
 }
 
 export async function skipAlbum(userId: string, albumId: string) {
@@ -125,6 +142,7 @@ export async function skipAlbum(userId: string, albumId: string) {
 
   await checkAndAdvancePair(userId);
   revalidatePath("/dashboard");
+  revalidatePath("/media/[number]", "page");
 }
 
 export async function skipMovie(userId: string, movieId: string) {
@@ -143,6 +161,7 @@ export async function skipMovie(userId: string, movieId: string) {
 
   await checkAndAdvancePair(userId);
   revalidatePath("/dashboard");
+  revalidatePath("/media/[number]", "page");
 }
 
 async function checkAndAdvancePair(userId: string) {
@@ -195,5 +214,79 @@ export async function getProgress(userId: string) {
     albumsCompleted: albumsResult.data?.length || 0,
     moviesCompleted: moviesResult.data?.length || 0,
     currentPairNumber: profile.data?.current_pair_number || 1,
+  };
+}
+
+export async function getPairsList(
+  userId: string,
+  page: number = 1,
+  pageSize: number = 25
+) {
+  const supabase = await createClient();
+
+  const offset = (page - 1) * pageSize;
+
+  // Get total count
+  const { count } = await supabase
+    .from("albums")
+    .select("*", { count: "exact", head: true });
+
+  // Fetch albums and movies for this page
+  const [albumsResult, moviesResult] = await Promise.all([
+    supabase
+      .from("albums")
+      .select("*")
+      .order("list_number", { ascending: true })
+      .range(offset, offset + pageSize - 1),
+    supabase
+      .from("movies")
+      .select("*")
+      .order("list_number", { ascending: true })
+      .range(offset, offset + pageSize - 1),
+  ]);
+
+  // Get user's completion status for these items
+  const albumIds = albumsResult.data?.map(a => a.id) || [];
+  const movieIds = moviesResult.data?.map(m => m.id) || [];
+
+  const [userAlbumsResult, userMoviesResult] = await Promise.all([
+    supabase
+      .from("user_albums")
+      .select("*")
+      .eq("user_id", userId)
+      .in("album_id", albumIds),
+    supabase
+      .from("user_movies")
+      .select("*")
+      .eq("user_id", userId)
+      .in("movie_id", movieIds),
+  ]);
+
+  // Map user data to albums and movies
+  const userAlbumsMap = new Map(
+    userAlbumsResult.data?.map(ua => [ua.album_id, ua]) || []
+  );
+  const userMoviesMap = new Map(
+    userMoviesResult.data?.map(um => [um.movie_id, um]) || []
+  );
+
+  const pairs = albumsResult.data?.map((album, index) => ({
+    pairNumber: album.list_number,
+    album,
+    movie: moviesResult.data?.[index] || null,
+    userAlbum: userAlbumsMap.get(album.id) || null,
+    userMovie: moviesResult.data?.[index]
+      ? userMoviesMap.get(moviesResult.data[index].id) || null
+      : null,
+  })) || [];
+
+  return {
+    pairs,
+    pagination: {
+      page,
+      pageSize,
+      totalItems: count || 0,
+      totalPages: Math.ceil((count || 0) / pageSize),
+    },
   };
 }

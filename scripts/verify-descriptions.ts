@@ -19,28 +19,36 @@ const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function verify() {
   // Check first movie with description
-  const { data: movies, error } = await supabase
+  const { data, error } = await supabase
     .from("movies")
-    .select("title, year, director, description, runtime, genre")
+    .select("*")
     .eq("list_number", 1)
     .single();
 
+  const movie = data as Database["public"]["Tables"]["movies"]["Row"] | null;
+
   if (error) {
     console.error("Error:", error);
-  } else {
-    console.log("\n🎬 First Movie Details:\n");
-    console.log(`Title: ${movies.title}`);
-    console.log(`Director: ${movies.director}`);
-    console.log(`Year: ${movies.year}`);
-    console.log(`Genre: ${movies.genre}`);
-    console.log(`Runtime: ${movies.runtime} minutes`);
-    console.log(`\nDescription: ${movies.description || "❌ NO DESCRIPTION"}`);
+    return;
+  }
 
-    if (movies.description) {
-      console.log("\n✅ Descriptions are successfully stored in the database!");
-    } else {
-      console.log("\n❌ WARNING: Description is missing!");
-    }
+  if (!movie) {
+    console.error("No movie found");
+    return;
+  }
+
+  console.log("\n🎬 First Movie Details:\n");
+  console.log(`Title: ${movie.title}`);
+  console.log(`Director: ${movie.director}`);
+  console.log(`Year: ${movie.year}`);
+  console.log(`Genre: ${movie.genre}`);
+  console.log(`Runtime: ${movie.runtime} minutes`);
+  console.log(`\nDescription: ${movie.description || "❌ NO DESCRIPTION"}`);
+
+  if (movie.description) {
+    console.log("\n✅ Descriptions are successfully stored in the database!");
+  } else {
+    console.log("\n❌ WARNING: Description is missing!");
   }
 }
 

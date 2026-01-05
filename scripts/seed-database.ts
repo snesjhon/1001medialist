@@ -39,9 +39,10 @@ async function seedMovies() {
         year: movie.year,
         genre: movie.genre || null,
         poster_url: movie.poster_url || null,
-        tmdb_id: null, // We don't have TMDB IDs in the new format
+        tmdb_id: movie.tmdb_id || null,
         runtime: movie.runtime || null,
         description: movie.description || null,
+        watch_provider_link: movie.watch_provider_link || null,
         list_number: movie.list_number,
       })) as any,
       { onConflict: "list_number" }
@@ -65,10 +66,10 @@ async function seedAlbums() {
         title: album.title,
         artist: album.artist,
         year: album.year,
-        genre: null, // Will be populated later
-        cover_url: null, // Will be populated later
-        spotify_id: null, // Will be populated later
-        description: null, // Will be populated later
+        genre: album.genre || null,
+        cover_url: album.cover_url || null,
+        spotify_id: null, // Not using Spotify API
+        description: null, // Omitting descriptions for now
         list_number: album.list_number,
       })) as any,
       { onConflict: "list_number" }

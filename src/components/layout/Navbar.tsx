@@ -22,6 +22,12 @@ export async function Navbar() {
                 Dashboard
               </Link>
               <Link
+                href="/list"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                List
+              </Link>
+              <Link
                 href="/stats"
                 className="text-sm font-medium transition-colors hover:text-primary"
               >

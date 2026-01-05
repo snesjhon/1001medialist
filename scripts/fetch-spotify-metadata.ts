@@ -19,7 +19,11 @@ interface SpotifyAlbum {
   genres: string[];
 }
 
-interface EnrichedAlbum extends AlbumSeed {
+interface EnrichedAlbum {
+  title: string;
+  artist: string;
+  year: number;
+  list_number: number;
   spotify_id: string | null;
   cover_url: string | null;
   genre: string | null;

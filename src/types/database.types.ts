@@ -59,6 +59,7 @@ export interface Database {
           runtime: number | null;
           list_number: number;
           description: string | null;
+          watch_provider_link: string | null;
           created_at: string;
         };
         Insert: {
@@ -72,6 +73,7 @@ export interface Database {
           runtime?: number | null;
           list_number: number;
           description?: string | null;
+          watch_provider_link?: string | null;
           created_at?: string;
         };
         Update: {
@@ -85,6 +87,7 @@ export interface Database {
           runtime?: number | null;
           list_number?: number;
           description?: string | null;
+          watch_provider_link?: string | null;
           created_at?: string;
         };
       };

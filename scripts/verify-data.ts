@@ -19,11 +19,13 @@ const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function verify() {
   // Check movies
-  const { data: movies, error: movieError } = await supabase
+  const { data: moviesData, error: movieError } = await supabase
     .from("movies")
     .select("*")
     .order("list_number", { ascending: true })
     .limit(5);
+
+  const movies = moviesData as Database["public"]["Tables"]["movies"]["Row"][] | null;
 
   if (movieError) {
     console.error("Error fetching movies:", movieError);
@@ -36,11 +38,13 @@ async function verify() {
   }
 
   // Check albums
-  const { data: albums, error: albumError } = await supabase
+  const { data: albumsData, error: albumError } = await supabase
     .from("albums")
     .select("*")
     .order("list_number", { ascending: true })
     .limit(5);
+
+  const albums = albumsData as Database["public"]["Tables"]["albums"]["Row"][] | null;
 
   if (albumError) {
     console.error("Error fetching albums:", albumError);

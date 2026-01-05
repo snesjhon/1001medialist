@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HistoryLoading() {
   return (
-    <div className="container py-8">
+    <div className="container max-w-7xl mx-auto py-8">
       <div className="space-y-8">
         <div>
           <Skeleton className="h-10 w-48 mb-2" />

@@ -1,0 +1,12 @@
+[
+  { "title": "Le Voyage Dans La Lune", "director": "Georges Méliès", "year": 1902, "list_number": 1 },
+  { "title": "The Great Train Robbery", "director": "Edwin S. Porter", "year": 1903, "list_number": 2 },
+  { "title": "The Birth of a Nation", "director": "D.W. Griffith", "year": 1915, "list_number": 3 },
+  { "title": "Les Vampires", "director": "Louis Feuillade", "year": 1916, "list_number": 4 },
+  { "title": "Intolerance", "director": "D.W. Griffith", "year": 1916, "list_number": 5 },
+  { "title": "The Cabinet of Dr. Caligari", "director": "Robert Wiene", "year": 1920, "list_number": 6 },
+  { "title": "Broken Blossoms", "director": "D.W. Griffith", "year": 1919, "list_number": 7 },
+  { "title": "Way Down East", "director": "D.W. Griffith", "year": 1920, "list_number": 8 },
+  { "title": "Within Our Gates", "director": "Oscar Micheaux", "year": 1920, "list_number": 9 },
+  { "title": "The Phantom Carriage", "director": "Victor Sjöström", "year": 1921, "list_number": 10 }
+]

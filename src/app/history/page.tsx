@@ -13,7 +13,7 @@ export default async function HistoryPage() {
   const history = await getUserHistory(user.id);
 
   return (
-    <div className="container py-8">
+    <div className="container max-w-7xl mx-auto py-8">
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Your History</h1>
