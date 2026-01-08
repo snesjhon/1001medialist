@@ -18,24 +18,26 @@ export default async function DashboardPage() {
   const currentPairNumber = progressData.currentPairNumber;
 
   return (
-    <div className="container max-w-7xl mx-auto py-8">
-      <div className="space-y-8">
-        {/* Static header - renders immediately */}
-        <MediaHeader currentPairNumber={currentPairNumber} isOnDashboard={true} />
+    <div className="min-h-screen bg-background">
+      <div className="container max-w-6xl mx-auto px-4 py-4">
+        <div className="space-y-6">
+          {/* Navigation header */}
+          <MediaHeader currentPairNumber={currentPairNumber} isOnDashboard={true} />
 
-        {/* Album and Movie side-by-side - streaming */}
-        <div className="grid gap-8 md:grid-cols-2 md:items-stretch">
-          <Suspense fallback={<CardsSkeleton />}>
-            <PairCards userId={user.id} />
-          </Suspense>
+          {/* Album and Movie cards side-by-side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Suspense fallback={<CardsSkeleton />}>
+              <PairCards userId={user.id} />
+            </Suspense>
+          </div>
+
+          {/* Progress section */}
+          <ProgressBar
+            albumsCompleted={progressData.albumsCompleted}
+            moviesCompleted={progressData.moviesCompleted}
+            currentPairNumber={currentPairNumber}
+          />
         </div>
-
-        {/* Progress bar at the bottom - full width */}
-        <ProgressBar
-          albumsCompleted={progressData.albumsCompleted}
-          moviesCompleted={progressData.moviesCompleted}
-          currentPairNumber={currentPairNumber}
-        />
       </div>
     </div>
   );

@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@gluestack-style/react": "^1.0.57",
+    "@gluestack-ui/themed": "^1.1.73",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -23,9 +25,11 @@
     "class-variance-authority": "^0.7.1",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.562.0",
+    "nativewind": "^4.2.1",
     "next": "^15.1.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-native-svg": "^15.15.1",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
@@ -38,7 +42,7 @@
     "eslint-config-next": "^15.1.4",
     "postcss": "^8.4.35",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.19",
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.21.0",
     "typescript": "^5"

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CompleteButton } from "./CompleteButton";
 import { SkipButton } from "./SkipButton";
@@ -31,21 +31,11 @@ export function AlbumCard({ album, userAlbum, userId }: AlbumCardProps) {
 
   return (
     <Card className={`h-full flex flex-col ${albumCompleted ? "opacity-60" : ""}`}>
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <CardTitle className="text-lg">Album #{album.list_number}</CardTitle>
-          {albumCompleted && (
-            <Badge variant={userAlbum.skipped ? "secondary" : "default"}>
-              {userAlbum.skipped ? "Skipped" : `Rated ${userAlbum.rating}★`}
-            </Badge>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1">
-        <div className="flex flex-col gap-6">
+      <CardContent className="flex-1 p-6">
+        <div className="flex flex-col h-full">
           {/* Album Cover */}
           {album.cover_url && (
-            <div className="relative w-full h-80 max-w-md mx-auto overflow-hidden rounded-md">
+            <div className="relative w-full h-[600px] mb-4 overflow-hidden rounded-md flex items-center justify-center bg-muted/20">
               <Image
                 src={album.cover_url}
                 alt={`${album.title} cover`}
@@ -55,15 +45,26 @@ export function AlbumCard({ album, userAlbum, userId }: AlbumCardProps) {
             </div>
           )}
 
+          {/* Completion badge */}
+          {albumCompleted && (
+            <Badge
+              variant={userAlbum.skipped ? "secondary" : "default"}
+              className="w-fit mb-3"
+            >
+              {userAlbum.skipped ? "Skipped" : `Rated ${userAlbum.rating}★`}
+            </Badge>
+          )}
+
           {/* Album Details */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div>
               <h3 className="text-2xl font-bold">{album.title}</h3>
               <p className="text-lg text-muted-foreground">{album.artist}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="outline">{album.year}</Badge>
-                {album.genre && <Badge variant="outline">{album.genre}</Badge>}
-              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="outline">{album.year}</Badge>
+              {album.genre && <Badge variant="outline">{album.genre}</Badge>}
             </div>
 
             {album.description && (
@@ -73,14 +74,16 @@ export function AlbumCard({ album, userAlbum, userId }: AlbumCardProps) {
             )}
 
             {album.spotify_id && (
-              <a
-                href={`https://open.spotify.com/album/${album.spotify_id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex text-sm text-primary hover:underline"
-              >
-                Listen on Spotify →
-              </a>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={`https://open.spotify.com/album/${album.spotify_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex text-sm font-medium text-primary hover:underline"
+                >
+                  Listen on Spotify →
+                </a>
+              </div>
             )}
           </div>
         </div>

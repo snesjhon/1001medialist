@@ -1,5 +1,4 @@
 import { Progress } from "@/components/ui/progress";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ProgressBarProps {
   albumsCompleted: number;
@@ -17,39 +16,35 @@ export function ProgressBar({
   const progressPercent = (totalCompleted / totalItems) * 100;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Your Progress</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>Overall Progress</span>
-            <span className="font-medium">
-              {totalCompleted} / {totalItems} ({progressPercent.toFixed(1)}%)
-            </span>
-          </div>
-          <Progress value={progressPercent} className="h-2" />
+    <div className="border-t pt-6">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Your Progress</h3>
+          <p className="text-sm text-muted-foreground">
+            {totalCompleted} / {totalItems} items ({progressPercent.toFixed(1)}%)
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 pt-2">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Albums</p>
-            <p className="text-2xl font-bold">{albumsCompleted}</p>
-            <p className="text-xs text-muted-foreground">/ 1001</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Movies</p>
-            <p className="text-2xl font-bold">{moviesCompleted}</p>
-            <p className="text-xs text-muted-foreground">/ 1001</p>
-          </div>
-        </div>
+        <Progress value={progressPercent} className="h-3" />
 
-        <div className="pt-2 border-t">
-          <p className="text-sm text-muted-foreground">Current Pair</p>
-          <p className="text-xl font-semibold">#{currentPairNumber}</p>
+        <div className="grid grid-cols-3 gap-6 pt-2">
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground mb-1">Albums</p>
+            <p className="text-3xl font-bold">{albumsCompleted}</p>
+            <p className="text-xs text-muted-foreground">of 1001</p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground mb-1">Movies</p>
+            <p className="text-3xl font-bold">{moviesCompleted}</p>
+            <p className="text-xs text-muted-foreground">of 1001</p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground mb-1">Current Pair</p>
+            <p className="text-3xl font-bold">#{currentPairNumber}</p>
+            <p className="text-xs text-muted-foreground">of 1001</p>
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

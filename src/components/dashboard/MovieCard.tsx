@@ -1,11 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { CompleteButton } from "./CompleteButton";
 import { SkipButton } from "./SkipButton";
 import type { Database } from "@/types/database.types";
@@ -20,8 +15,6 @@ interface MovieCardProps {
 }
 
 export function MovieCard({ movie, userMovie, userId }: MovieCardProps) {
-  const [showDetails, setShowDetails] = useState(false);
-
   if (!movie) {
     return (
       <Card>
@@ -43,9 +36,9 @@ export function MovieCard({ movie, userMovie, userId }: MovieCardProps) {
     >
       <CardContent className="flex-1 p-6">
         <div className="flex flex-col h-full">
-          {/* Movie Poster - Larger, main focus */}
+          {/* Movie Poster */}
           {movie.poster_url && (
-            <div className="relative w-full h-96 mb-4 overflow-hidden rounded-md">
+            <div className="relative w-full h-[600px] mb-4 overflow-hidden rounded-md flex items-center justify-center bg-muted/20">
               <Image
                 src={movie.poster_url}
                 alt={`${movie.title} poster`}
@@ -65,67 +58,49 @@ export function MovieCard({ movie, userMovie, userId }: MovieCardProps) {
             </Badge>
           )}
 
-          {/* Compact info below poster */}
-          <h3 className="text-2xl font-bold mb-1">{movie.title}</h3>
-          <p className="text-xl text-muted-foreground mb-3">{movie.director}</p>
+          {/* Movie Details */}
+          <div className="space-y-3">
+            <div>
+              <h3 className="text-2xl font-bold">{movie.title}</h3>
+              <p className="text-lg text-muted-foreground">{movie.director}</p>
+            </div>
 
-          {/* Badges inline */}
-          <div className="flex flex-wrap gap-2 mb-3">
-            <Badge variant="outline">{movie.year}</Badge>
-            {movie.genre && <Badge variant="outline">{movie.genre}</Badge>}
-            {movie.runtime && (
-              <Badge variant="outline">{movie.runtime} min</Badge>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowDetails(!showDetails)}
-              className="px-0 h-8 text-muted-foreground hover:text-foreground"
-            >
-              {showDetails ? (
-                <>
-                  <ChevronUp className="h-4 w-4 mr-1" />
-                  Hide details
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="h-4 w-4 mr-1" />
-                  Show details
-                </>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="outline">{movie.year}</Badge>
+              {movie.genre && <Badge variant="outline">{movie.genre}</Badge>}
+              {movie.runtime && (
+                <Badge variant="outline">{movie.runtime} min</Badge>
               )}
-            </Button>
+            </div>
 
-            {showDetails && (
-              <div className="space-y-3 mt-3">
-                {movie.description && (
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {movie.description}
-                  </p>
-                )}
-                <div className="flex flex-wrap gap-3">
-                  {movie.watch_provider_link && (
-                    <a
-                      href={movie.watch_provider_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex text-sm font-medium text-primary hover:underline"
-                    >
-                      Where to Watch →
-                    </a>
-                  )}
-                  {movie.tmdb_id && (
-                    <a
-                      href={`https://www.themoviedb.org/movie/${movie.tmdb_id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex text-sm text-muted-foreground hover:text-primary hover:underline"
-                    >
-                      TMDB →
-                    </a>
-                  )}
-                </div>
-              </div>
+            {movie.description && (
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {movie.description}
+              </p>
             )}
+
+            <div className="flex flex-wrap gap-3">
+              {movie.watch_provider_link && (
+                <a
+                  href={movie.watch_provider_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex text-sm font-medium text-primary hover:underline"
+                >
+                  Where to Watch →
+                </a>
+              )}
+              {movie.tmdb_id && (
+                <a
+                  href={`https://www.themoviedb.org/movie/${movie.tmdb_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex text-sm text-muted-foreground hover:text-primary hover:underline"
+                >
+                  TMDB →
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>

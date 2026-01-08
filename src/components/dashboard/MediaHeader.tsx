@@ -24,36 +24,41 @@ export function MediaHeader({
   };
 
   return (
-    <div className="flex items-center justify-between">
-      {/* Left group: Current, Random */}
+    <div className="flex items-center justify-center gap-8 py-4">
+      {/* Left actions */}
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="lg" asChild disabled={isOnDashboard}>
+        <Button variant="outline" size="icon" asChild disabled={isOnDashboard}>
           <Link href="/dashboard">
-            <Home className="h-5 w-5" />
+            <Home className="h-4 w-4" />
           </Link>
         </Button>
 
-        <Button variant="outline" size="lg" onClick={handleRandom}>
-          <Shuffle className="h-2 w-2 " />
+        <Button variant="outline" size="icon" onClick={handleRandom}>
+          <Shuffle className="h-4 w-4" />
         </Button>
       </div>
 
-      {/* Right group: Previous, Number, Next */}
-      <div className="flex items-center gap-3">
-        <Button variant="outline" size="lg" asChild disabled={!hasPrevious}>
+      {/* Center: Pair navigation */}
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="icon" asChild disabled={!hasPrevious}>
           <Link href={`/media/${currentPairNumber - 1}`}>
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4" />
           </Link>
         </Button>
 
-        <div className="text-3xl font-bold px-4">{currentPairNumber}/1001</div>
+        <div className="min-w-[140px] text-center">
+          <div className="text-2xl font-bold">{currentPairNumber} / 1001</div>
+        </div>
 
-        <Button variant="outline" size="lg" asChild disabled={!hasNext}>
+        <Button variant="outline" size="icon" asChild disabled={!hasNext}>
           <Link href={`/media/${currentPairNumber + 1}`}>
-            <ChevronRight className="h-5 w-5 " />
+            <ChevronRight className="h-4 w-4" />
           </Link>
         </Button>
       </div>
+
+      {/* Right spacer for balance */}
+      <div className="w-[88px]"></div>
     </div>
   );
 }
