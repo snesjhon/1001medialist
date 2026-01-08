@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { HStack, Button, ButtonIcon, Text } from "@gluestack-ui/themed";
 import { router } from "expo-router";
 import { Home, Shuffle, ChevronLeft, ChevronRight } from "lucide-react-native";
@@ -7,7 +8,7 @@ interface MediaHeaderProps {
   isOnDashboard?: boolean;
 }
 
-export function MediaHeader({
+export const MediaHeader = memo(function MediaHeader({
   currentPairNumber,
   isOnDashboard = false,
 }: MediaHeaderProps) {
@@ -16,18 +17,18 @@ export function MediaHeader({
 
   const handleRandom = () => {
     const randomPair = Math.floor(Math.random() * 1001) + 1;
-    router.push(`/media/${randomPair}`);
+    router.push(`/(app)/media/${randomPair}`);
   };
 
   const handlePrevious = () => {
     if (hasPrevious) {
-      router.push(`/media/${currentPairNumber - 1}`);
+      router.push(`/(app)/media/${currentPairNumber - 1}`);
     }
   };
 
   const handleNext = () => {
     if (hasNext) {
-      router.push(`/media/${currentPairNumber + 1}`);
+      router.push(`/(app)/media/${currentPairNumber + 1}`);
     }
   };
 
@@ -44,7 +45,7 @@ export function MediaHeader({
           variant="outline"
           size="sm"
           isDisabled={isOnDashboard}
-          onPress={() => router.push("/")}
+          onPress={() => router.push("/(app)/dashboard")}
           borderRadius="$md"
           borderWidth={1.5}
           borderColor="$gray300"
@@ -101,4 +102,4 @@ export function MediaHeader({
       </HStack>
     </HStack>
   );
-}
+});

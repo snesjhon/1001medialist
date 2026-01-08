@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { ScrollView, RefreshControl, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView } from "react-native";
 import {
   Box,
   VStack,
@@ -12,76 +12,39 @@ import {
   Card,
   Spinner,
 } from "@gluestack-ui/themed";
-import { useFocusEffect } from "expo-router";
+import { router } from "expo-router";
 import { supabase } from "../lib/supabase";
-import { getCurrentPair, getProgress } from "../lib/supabase-queries";
-import { MediaHeader } from "../components/dashboard/MediaHeader";
-import { ProgressBar } from "../components/dashboard/ProgressBar";
-import { AlbumCard } from "../components/dashboard/AlbumCard";
-import { MovieCard } from "../components/dashboard/MovieCard";
-import { Navbar } from "../components/layout/Navbar";
-import type { User } from "@supabase/supabase-js";
 
 export default function HomeScreen() {
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [pairData, setPairData] = useState<any>(null);
-  const [progressData, setProgressData] = useState<any>(null);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const checkSession = useCallback(async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    setUser(session?.user ?? null);
-    setLoading(false);
-  }, []);
-
-  const loadData = async (userId: string) => {
-    try {
-      const [pair, progress] = await Promise.all([
-        getCurrentPair(userId),
-        getProgress(userId),
-      ]);
-
-      setPairData(pair);
-      setProgressData(progress);
-    } catch (error) {
-      console.error("Error loading dashboard:", error);
-    } finally {
-      setRefreshing(false);
-    }
-  };
 
   useEffect(() => {
-    checkSession();
+    const checkAuth = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        router.replace("/(app)/dashboard");
+      } else {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
       if (session?.user) {
-        loadData(session.user.id);
+        router.replace("/(app)/dashboard");
       }
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, [checkSession]);
-
-  useEffect(() => {
-    if (user) {
-      loadData(user.id);
-    }
-  }, [user]);
-
-  useFocusEffect(
-    useCallback(() => {
-      checkSession();
-    }, [checkSession]),
-  );
+  }, []);
 
   const handleSignIn = async () => {
     if (!email) {
@@ -103,24 +66,6 @@ export default function HomeScreen() {
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      setPairData(null);
-      setProgressData(null);
-    } catch (error: any) {
-      alert(error.message);
-    }
-  };
-
-  const handleRefresh = () => {
-    if (user) {
-      setRefreshing(true);
-      loadData(user.id);
-    }
-  };
-
   if (loading) {
     return (
       <Box flex={1} alignItems="center" justifyContent="center" bg="$gray50">
@@ -129,9 +74,8 @@ export default function HomeScreen() {
     );
   }
 
-  // Not logged in - show auth
-  if (!user) {
-    return (
+  // Show login form
+  return (
       <ScrollView style={{ flex: 1, backgroundColor: "#f9fafb" }}>
         <Box p="$8" maxWidth={480} mx="auto" w="$full" mt="$20">
           <Card bg="$white" p="$10" borderRadius="$2xl" variant="elevated">
@@ -180,76 +124,4 @@ export default function HomeScreen() {
         </Box>
       </ScrollView>
     );
-  }
-
-  // Logged in - show dashboard
-  return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: "#f9fafb" }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-      }
-    >
-      {/* Unified Navigation Header */}
-      <Navbar onSignOut={handleSignOut} isAuthenticated={true} />
-
-      {!pairData || !progressData ? (
-        <Box flex={1} alignItems="center" justifyContent="center" p="$12">
-          <Spinner size="large" />
-        </Box>
-      ) : (
-        <View
-          style={{
-            maxWidth: 1280,
-            marginHorizontal: "auto",
-            width: "100%",
-            padding: 32,
-          }}
-        >
-          {/* Navigation Header */}
-          <Box mb="$6">
-            <MediaHeader
-              currentPairNumber={progressData.currentPairNumber}
-              isOnDashboard={true}
-            />
-          </Box>
-
-          {/* Album and Movie Cards - Grid Layout for Web */}
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 32,
-              flexWrap: "wrap",
-              marginBottom: 32,
-            }}
-          >
-            <View style={{ flex: 1, minWidth: 400 }}>
-              <AlbumCard
-                album={pairData.album}
-                userAlbum={pairData.userAlbum}
-                userId={user.id}
-                onUpdate={handleRefresh}
-              />
-            </View>
-            <View style={{ flex: 1, minWidth: 400 }}>
-              <MovieCard
-                movie={pairData.movie}
-                userMovie={pairData.userMovie}
-                userId={user.id}
-                onUpdate={handleRefresh}
-              />
-            </View>
-          </View>
-
-          {/* Progress Bar */}
-          <ProgressBar
-            albumsCompleted={progressData.albumsCompleted}
-            moviesCompleted={progressData.moviesCompleted}
-            currentPairNumber={progressData.currentPairNumber}
-          />
-        </View>
-      )}
-    </ScrollView>
-  );
 }

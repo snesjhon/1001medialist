@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Linking, Image } from "react-native";
 import {
   Card,
@@ -21,7 +22,7 @@ interface AlbumCardProps {
   onUpdate?: () => void;
 }
 
-export function AlbumCard({
+export const AlbumCard = memo(function AlbumCard({
   album,
   userAlbum,
   userId,
@@ -143,4 +144,4 @@ export function AlbumCard({
       </VStack>
     </Card>
   );
-}
+});

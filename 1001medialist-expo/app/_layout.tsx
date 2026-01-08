@@ -6,8 +6,6 @@ import * as Linking from "expo-linking";
 import { supabase } from "../lib/supabase";
 
 import { config as defaultConfig } from "@gluestack-ui/config";
-// import config from '../gluestack-ui.config';
-import "../global.css";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -83,14 +81,9 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerShown: false,
+            animation: "none", // Disable animations for smoother transitions
           }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="dashboard" />
-          <Stack.Screen name="stats" />
-          <Stack.Screen name="list" />
-          <Stack.Screen name="history" />
-        </Stack>
+        />
       </SafeAreaProvider>
     </GluestackUIProvider>
   );

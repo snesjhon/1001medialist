@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Linking, Image } from "react-native";
 import {
   Card,
@@ -24,7 +24,7 @@ interface MovieCardProps {
   onUpdate?: () => void;
 }
 
-export function MovieCard({
+export const MovieCard = memo(function MovieCard({
   movie,
   userMovie,
   userId,
@@ -191,4 +191,4 @@ export function MovieCard({
       </VStack>
     </Card>
   );
-}
+});

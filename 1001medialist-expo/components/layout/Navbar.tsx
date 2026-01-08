@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View } from 'react-native';
 import { Box, HStack, Heading, Button, ButtonText } from '@gluestack-ui/themed';
 import { router } from 'expo-router';
@@ -7,7 +8,7 @@ interface NavbarProps {
   isAuthenticated?: boolean;
 }
 
-export function Navbar({ onSignOut, isAuthenticated = false }: NavbarProps) {
+export const Navbar = memo(function Navbar({ onSignOut, isAuthenticated = false }: NavbarProps) {
   return (
     <Box bg="$white" borderBottomWidth={1} borderColor="$gray200" py="$6">
       <View style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%', paddingHorizontal: 32 }}>
@@ -21,7 +22,7 @@ export function Navbar({ onSignOut, isAuthenticated = false }: NavbarProps) {
           {isAuthenticated && (
             <HStack space="md" alignItems="center">
               <Button
-                onPress={() => router.push('/')}
+                onPress={() => router.push('/(app)/dashboard')}
                 variant="link"
                 size="sm"
               >
@@ -30,7 +31,7 @@ export function Navbar({ onSignOut, isAuthenticated = false }: NavbarProps) {
                 </ButtonText>
               </Button>
               <Button
-                onPress={() => router.push('/list')}
+                onPress={() => router.push('/(app)/list')}
                 variant="link"
                 size="sm"
               >
@@ -39,7 +40,7 @@ export function Navbar({ onSignOut, isAuthenticated = false }: NavbarProps) {
                 </ButtonText>
               </Button>
               <Button
-                onPress={() => router.push('/stats')}
+                onPress={() => router.push('/(app)/stats')}
                 variant="link"
                 size="sm"
               >
@@ -48,7 +49,7 @@ export function Navbar({ onSignOut, isAuthenticated = false }: NavbarProps) {
                 </ButtonText>
               </Button>
               <Button
-                onPress={() => router.push('/history')}
+                onPress={() => router.push('/(app)/history')}
                 variant="link"
                 size="sm"
               >
@@ -71,4 +72,4 @@ export function Navbar({ onSignOut, isAuthenticated = false }: NavbarProps) {
       </View>
     </Box>
   );
-}
+});
